@@ -2,18 +2,39 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Quarterly_Report_v1.xlsx</title>
+    <title>Veri Analizi: Excel_Fonksiyonları_ve_VLOOCUP - Vikipedi</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="excel-container">
-        <div class="ribbon">Dosya | Giriş | Ekle | Sayfa Düzeni | Formüller | Veri</div>
-        <div class="formula-bar">
-            <div class="cell-address">C3</div>
-            <input type="text" id="formula-input" value="=START_GAME()" readonly>
+    <div id="mw-head">
+        <div class="user-tools">Oturum açılmadı | Tartışma | Katkılar</div>
+    </div>
+
+    <div id="mw-wrapper">
+        <div id="mw-navigation">
+            <div class="wiki-logo">VLOO-CUP</div>
+            <ul>
+                <li><a href="#">Anasayfa</a></li>
+                <li><a href="#">Hakkımızda</a></li>
+                <li><a href="#">Rastgele madde</a></li>
+            </ul>
         </div>
-        <div class="grid-wrapper">
-            <table id="excel-grid"></table>
+
+        <div id="content">
+            <h1 id="firstHeading">Excel Veri Sayım Analizi (Level 1)</h1>
+            <div id="bodyContent">
+                <p>Aşağıdaki tablo, 2026 yılı birinci çeyrek verilerini temsil etmektedir. Verilerin doğruluğu <strong>=COUNTIF</strong> fonksiyonu ile teyit edilmelidir.</p>
+                
+                <div class="excel-frame">
+                    <div class="formula-bar-wiki">
+                        <span class="cell-address">C3</span>
+                        <input type="text" id="formula-input" placeholder="Formülünüzü buraya girin...">
+                    </div>
+                    <div class="grid-container">
+                        <table id="excel-grid"></table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
