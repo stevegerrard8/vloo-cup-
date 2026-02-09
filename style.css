@@ -1,23 +1,27 @@
-/* Senin karakterin: Yeşil Çerçeve */
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #fff; overflow: hidden; }
+.excel-container { display: flex; flex-direction: column; height: 100vh; }
+.ribbon { background: #217346; color: white; padding: 8px 15px; font-size: 12px; }
+.formula-bar { display: flex; border-bottom: 1px solid #d1d1d1; background: #f3f3f3; padding: 4px; }
+.cell-address { width: 50px; background: white; border: 1px solid #ccc; text-align: center; font-size: 13px; line-height: 25px; margin-right: 5px; }
+#formula-input { flex: 1; border: 1px solid #ccc; padding: 0 10px; }
+
+.grid-wrapper { overflow: auto; flex: 1; }
+#excel-grid { border-collapse: collapse; }
+#excel-grid td { border: 1px solid #d1d1d1; min-width: 80px; height: 25px; text-align: center; font-size: 12px; color: #444; }
+
+/* Senin Karakterin */
 .selected-cell {
     outline: 2px solid #217346 !important;
     outline-offset: -2px;
-    background-color: rgba(33, 115, 70, 0.15); /* Hafif yeşil dolgu */
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    background: rgba(33, 115, 70, 0.1);
 }
 
-/* Tablo genel görünümü */
-#excel-grid {
-    border-collapse: collapse;
-    table-layout: fixed;
-    width: 100%;
+/* Hedef Hücre (Avlaman gereken) */
+.active-cell {
+    background-color: #ffeb3b !important; /* Sarı parlama */
+    font-weight: bold;
+    animation: blink 1s infinite;
 }
 
-#excel-grid td {
-    border: 1px solid #d1d1d1;
-    height: 25px;
-    width: 80px;
-    font-size: 12px;
-    overflow: hidden;
-    white-space: nowrap;
-}
+@keyframes blink { 50% { opacity: 0.4; } }
+.row-header { background: #f3f3f3; font-weight: bold; width: 40px !important; }
