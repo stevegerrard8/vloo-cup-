@@ -1,27 +1,77 @@
-body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #fff; overflow: hidden; }
-.excel-container { display: flex; flex-direction: column; height: 100vh; }
-.ribbon { background: #217346; color: white; padding: 8px 15px; font-size: 12px; }
-.formula-bar { display: flex; border-bottom: 1px solid #d1d1d1; background: #f3f3f3; padding: 4px; }
-.cell-address { width: 50px; background: white; border: 1px solid #ccc; text-align: center; font-size: 13px; line-height: 25px; margin-right: 5px; }
-#formula-input { flex: 1; border: 1px solid #ccc; padding: 0 10px; }
+/* Wikipedia Temelleri */
+body {
+    background-color: #f6f6f6;
+    margin: 0;
+    font-family: sans-serif;
+    color: #202122;
+}
 
-.grid-wrapper { overflow: auto; flex: 1; }
-#excel-grid { border-collapse: collapse; }
-#excel-grid td { border: 1px solid #d1d1d1; min-width: 80px; height: 25px; text-align: center; font-size: 12px; color: #444; }
+#mw-wrapper { display: flex; }
 
-/* Senin Karakterin */
+/* Sol Menü */
+#mw-navigation {
+    width: 160px;
+    padding: 1em;
+    font-size: 0.75em;
+}
+
+.wiki-logo {
+    font-size: 1.5em;
+    font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+    margin-bottom: 1em;
+    border-bottom: 1px solid #a2a9b1;
+}
+
+#mw-navigation ul { list-style: none; padding: 0; }
+#mw-navigation a { color: #0645ad; text-decoration: none; }
+
+/* İçerik Alanı */
+#content {
+    background: white;
+    border: 1px solid #a2a9b1;
+    border-right: none;
+    padding: 1.5em;
+    flex: 1;
+    font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+}
+
+#firstHeading {
+    font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+    font-size: 1.8em;
+    border-bottom: 1px solid #a2a9b1;
+    margin-bottom: 0.5em;
+}
+
+/* Excel Tablo Alanı (Vikipedi içine gömülü tablo gibi) */
+.excel-frame {
+    border: 1px solid #a2a9b1;
+    margin-top: 1em;
+    font-family: sans-serif; /* Excel içi düz yazı olsun */
+}
+
+.formula-bar-wiki {
+    background: #f8f9fa;
+    border-bottom: 1px solid #a2a9b1;
+    padding: 5px;
+    display: flex;
+}
+
+#excel-grid {
+    border-collapse: collapse;
+    background: white;
+}
+
+#excel-grid td {
+    border: 1px solid #d1d1d1;
+    height: 22px;
+    min-width: 80px;
+    font-size: 12px;
+}
+
+/* Wikipedia'nın o meşhur Seçili Hücre (Edit modu gibi) */
 .selected-cell {
-    outline: 2px solid #217346 !important;
-    outline-offset: -2px;
-    background: rgba(33, 115, 70, 0.1);
+    outline: 2px solid #36c !important; /* Wikipedia Mavisi */
+    background-color: rgba(51, 102, 204, 0.05);
 }
 
-/* Hedef Hücre (Avlaman gereken) */
-.active-cell {
-    background-color: #ffeb3b !important; /* Sarı parlama */
-    font-weight: bold;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink { 50% { opacity: 0.4; } }
-.row-header { background: #f3f3f3; font-weight: bold; width: 40px !important; }
+.row-header { background: #eaecf0; font-weight: bold; width: 30px; text-align: center; }
