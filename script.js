@@ -1,28 +1,18 @@
 const grid = document.getElementById('excel-grid');
 const cellAddressDisplay = document.querySelector('.cell-address');
-const formulaInput = document.getElementById('formula-input');
 
 let currentRow = 0;
-let currentCol = 1; // 0. sütun numara sütunu
-let targetRow, targetCol, currentTask;
-let score = 0;
-let isEditing = false;
+let currentCol = 1; // 0. sütun numara sütunu olduğu için 1'den başlıyoruz
 
-const tasks = [
-    { label: "COPY", key: "c", ctrl: true },
-    { label: "PASTE", key: "v", ctrl: true },
-    { label: "CUT", key: "x", ctrl: true },
-    { label: "EDIT (F2)", key: "F2", ctrl: false },
-    { label: "ENTER", key: "Enter", ctrl: false }
-];
-
+// 1. Tabloyu oluştururken ID'leri ve sınıfları net veriyoruz
 function createGrid() {
     grid.innerHTML = "";
-    for (let r = 0; r < 20; r++) {
+    for (let r = 0; r < 30; r++) { // 30 satır
         const tr = document.createElement('tr');
-        for (let c = 0; c < 10; c++) {
+        for (let c = 0; c < 15; c++) { // 15 sütun (A-O)
             const td = document.createElement('td');
             td.id = `cell-${r}-${c}`;
+            
             if (c === 0) {
                 td.innerText = r + 1;
                 td.classList.add('row-header');
@@ -32,61 +22,40 @@ function createGrid() {
         grid.appendChild(tr);
     }
     updateSelection();
-    setNewTarget();
 }
 
-function setNewTarget() {
-    if (targetRow !== undefined) {
-        const oldCell = document.getElementById(`cell-${targetRow}-${targetCol}`);
-        oldCell.classList.remove('active-cell');
-        oldCell.innerText = "";
-    }
-    
-    targetRow = Math.floor(Math.random() * 20);
-    targetCol = Math.floor(Math.random() * 9) + 1;
-    currentTask = tasks[Math.floor(Math.random() * tasks.length)];
-    
-    const targetCell = document.getElementById(`cell-${targetRow}-${targetCol}`);
-    targetCell.classList.add('active-cell');
-    targetCell.innerText = currentTask.label;
-    formulaInput.value = `GÖREV: ${currentTask.label} komutunu uygula!`;
-}
-
+// 2. Seçili hücreyi görsel olarak güncelleme
 function updateSelection() {
-    document.querySelectorAll('td').forEach(td => td.classList.remove('selected-cell'));
+    // Önceki seçili olanı temizle
+    const previous = document.querySelector('.selected-cell');
+    if (previous) previous.classList.remove('selected-cell');
+
+    // Yeni hücreyi bul ve vurgula
     const currentCell = document.getElementById(`cell-${currentRow}-${currentCol}`);
-    currentCell.classList.add('selected-cell');
-    
-    const colLetter = String.fromCharCode(64 + currentCol);
-    cellAddressDisplay.innerText = `${colLetter}${currentRow + 1}`;
+    if (currentCell) {
+        currentCell.classList.add('selected-cell');
+        
+        // Excel adresini yaz (Örn: B5)
+        const colLetter = String.fromCharCode(64 + currentCol);
+        cellAddressDisplay.innerText = `${colLetter}${currentRow + 1}`;
+        
+        // Seçili hücre her zaman ekranda kalsın (Scroll takibi)
+        currentCell.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
 }
 
+// 3. Klavye Kontrolleri (Sadece Ok Tuşları ile Başlayalım)
 window.addEventListener('keydown', (e) => {
-    // F2 ve Ok Tuşları gibi default browser hareketlerini engelle (Oyunu bozmasın)
-    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","F2"].includes(e.key)) {
-        e.preventDefault();
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
+        e.preventDefault(); // Sayfanın kaymasını engelle
     }
 
-    // Hareket Kontrolleri
-    if (!isEditing) {
-        if (e.key === 'ArrowUp' && currentRow > 0) currentRow--;
-        if (e.key === 'ArrowDown' && currentRow < 19) currentRow++;
-        if (e.key === 'ArrowLeft' && currentCol > 1) currentCol--;
-        if (e.key === 'ArrowRight' && currentCol < 9) currentCol++;
+    switch(e.key) {
+        case 'ArrowUp': if (currentRow > 0) currentRow--; break;
+        case 'ArrowDown': if (currentRow < 29) currentRow++; break;
+        case 'ArrowLeft': if (currentCol > 1) currentCol--; break;
+        case 'ArrowRight': if (currentCol < 14) currentCol++; break;
     }
-
-    // Görev Kontrolü
-    const isCorrectKey = e.key.toLowerCase() === currentTask.key.toLowerCase();
-    const isCorrectCtrl = e.ctrlKey === currentTask.ctrl;
-
-    if (currentRow === targetRow && currentCol === targetCol) {
-        if (isCorrectKey && isCorrectCtrl) {
-            score += 150;
-            formulaInput.value = `TEBRİKLER! Skor: ${score}`;
-            setNewTarget();
-        }
-    }
-
     updateSelection();
 });
 
