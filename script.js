@@ -5,25 +5,20 @@ const cellAddressDisplay = document.querySelector('.cell-address');
 let currentLevel = 1;
 let currentRow = 0;
 let currentCol = 1;
-let score = 0;
+let isEditing = false;
 
 // Level 1 Verileri
 const names = ["Ali", "Ayşe", "Mehmet", "Ali", "Can", "Ayşe", "Ali", "Zeynep", "Can"];
 const targets = [
-    { name: "Ali", count: 3, userAns: null, row: 2, col: 4 },
-    { name: "Ayşe", count: 2, userAns: null, row: 3, col: 4 },
-    { name: "Can", count: 2, userAns: null, row: 4, col: 4 }
+    { name: "Ali", formula: '=COUNTIF(B1:B9;"Ali")', row: 2, col: 4, correct: false },
+    { name: "Ayşe", formula: '=COUNTIF(B1:B9;"Ayşe")', row: 3, col: 4, correct: false },
+    { name: "Can", formula: '=COUNTIF(B1:B9;"Can")', row: 4, col: 4, correct: false }
 ];
 
 function initLevel(level) {
     grid.innerHTML = "";
-    if (level === 1) {
-        buildLevel1();
-        formulaInput.value = "LEVEL 1: İsimleri say ve D sütununa adetlerini yaz!";
-    } else if (level === 2) {
-        buildLevel2();
-        formulaInput.value = "LEVEL 2: Hatalı hücreleri (#REF!) bul ve Enter ile temizle!";
-    }
+    if (level === 1) buildLevel1();
+    updateSelection();
 }
 
 function buildLevel1() {
@@ -32,62 +27,82 @@ function buildLevel1() {
         for (let c = 0; c < 10; c++) {
             const td = document.createElement('td');
             td.id = `cell-${r}-${c}`;
-            
-            // A Sütunu: İsim Listesi
             if (c === 1 && r < names.length) td.innerText = names[r];
-            // C Sütunu: Hedef İsimler
             if (c === 3) {
                 const target = targets.find(t => t.row === r);
-                if (target) td.innerText = target.name + ":";
+                if (target) td.innerText = target.name + " Sayısı:";
             }
-            // Satır No
             if (c === 0) { td.innerText = r + 1; td.classList.add('row-header'); }
-            
             tr.appendChild(td);
         }
         grid.appendChild(tr);
     }
 }
 
-// Level 2 ve 3 yapıları buraya eklenecek... 
-// (Şimdilik Level 1 mekaniğini çalıştıralım)
-
 window.addEventListener('keydown', (e) => {
-    // Sayı girişi kontrolü (Level 1 için)
-    if (currentLevel === 1 && !isNaN(e.key) && currentCol === 4) {
-        const target = targets.find(t => t.row === currentRow);
-        if (target) {
-            const cell = document.getElementById(`cell-${currentRow}-${currentCol}`);
-            cell.innerText = e.key;
-            target.userAns = parseInt(e.key);
-            checkLevel1Progress();
-        }
-    }
+    const currentCell = document.getElementById(`cell-${currentRow}-${currentCol}`);
 
-    // Hareket
-    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) e.preventDefault();
-    switch(e.key) {
-        case 'ArrowUp': if (currentRow > 0) currentRow--; break;
-        case 'ArrowDown': if (currentRow < 19) currentRow++; break;
-        case 'ArrowLeft': if (currentCol > 1) currentCol--; break;
-        case 'ArrowRight': if (currentCol < 9) currentCol++; break;
+    if (!isEditing) {
+        if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) e.preventDefault();
+        switch(e.key) {
+            case 'ArrowUp': if (currentRow > 0) currentRow--; break;
+            case 'ArrowDown': if (currentRow < 19) currentRow++; break;
+            case 'ArrowLeft': if (currentCol > 1) currentCol--; break;
+            case 'ArrowRight': if (currentCol < 9) currentCol++; break;
+            case 'F2': 
+                startEdit(currentCell); 
+                break;
+        }
+    } else if (e.key === 'Enter') {
+        stopEdit(currentCell);
     }
     updateSelection();
 });
 
+function startEdit(cell) {
+    isEditing = true;
+    cell.contentEditable = "true";
+    cell.focus();
+    cell.style.background = "white";
+}
+
+function stopEdit(cell) {
+    isEditing = false;
+    cell.contentEditable = "false";
+    const val = cell.innerText.trim().replace(/\s/g, ""); // Boşlukları temizle
+    
+    const target = targets.find(t => t.row === currentRow && t.col === currentCol);
+    if (target) {
+        // Formül kontrolü (Büyük/küçük harf duyarsız ve tırnak işareti esnek)
+        const expected = target.formula.replace(/\s/g, "").toUpperCase();
+        if (val.toUpperCase() === expected) {
+            target.correct = true;
+            cell.style.color = "#217346";
+            cell.innerText = target.count || "3"; // Sayıyı göster veya formülü bırak
+            checkLevel1Progress();
+        } else {
+            alert("Hatalı Formül! İpucu: =COUNTIF(B1:B9;\"İsim\")");
+            cell.innerText = "";
+        }
+    }
+}
+
 function checkLevel1Progress() {
-    const isDone = targets.every(t => t.userAns === t.count);
-    if (isDone) {
-        alert("Harika! Level 2'ye geçiyorsun...");
-        currentLevel = 2;
-        initLevel(2);
+    if (targets.every(t => t.correct)) {
+        alert("Crash Scope Gururla Sunar: Level 2'ye Hazırsın!");
+        // Level 2'ye geçiş kodları buraya...
     }
 }
 
 function updateSelection() {
+    if (isEditing) return;
     document.querySelectorAll('.selected-cell').forEach(el => el.classList.remove('selected-cell'));
     const cell = document.getElementById(`cell-${currentRow}-${currentCol}`);
-    if (cell) cell.classList.add('selected-cell');
+    if (cell) {
+        cell.classList.add('selected-cell');
+        const colLetter = String.fromCharCode(64 + currentCol);
+        cellAddressDisplay.innerText = `${colLetter}${currentRow + 1}`;
+    }
 }
 
 initLevel(1);
