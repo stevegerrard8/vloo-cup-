@@ -2,20 +2,19 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Quarterly_Report_Final_v2.xlsx</title>
+    <title>Quarterly_Report_v1.xlsx</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="excel-container">
-        <div class="ribbon">Dosya | Giriş | Ekle | Sayfa Düzeni | Formüller</div>
-        
+        <div class="ribbon">Dosya | Giriş | Ekle | Sayfa Düzeni | Formüller | Veri</div>
         <div class="formula-bar">
-            <div class="cell-address">A1</div>
-            <input type="text" id="formula-input" value="=PLAY_GAME(Harder)" readonly>
+            <div class="cell-address">C3</div>
+            <input type="text" id="formula-input" value="=START_GAME()" readonly>
         </div>
-
-        <table id="excel-grid">
-            </table>
+        <div class="grid-wrapper">
+            <table id="excel-grid"></table>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
